@@ -38,15 +38,24 @@ module.exports = {
 
     each: function() {
         update: function() {
-                // augmentArray(collection, this)
-                // console.log('collection updated')
-            }
-            // mutate: function (mutation) {
-
-        // }
+            augmentArray(collection, this)
+        }
+        mutate: function(mutation) {
+          console.log(mutation)
+        }
     }
 }
 
-// function augmentArray(collection, directive) {
+var push = [].push,
+  slice = [].slice
 
-// }
+function augmentArray(collection, directive) {
+  collection.push = function (element) {
+    push.call(this, arguments)
+    directive.mutate({
+      event: 'push',
+      elements: slice.call(arguments),
+      collection: collection
+    })
+  }
+}
