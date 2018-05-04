@@ -3,22 +3,26 @@ var config = require('./config'),
     Directives = require('./directives'),
     Filters = require('./filters')
 
-function Seed(opts) {
-    var self = this,
-        root = this.el = document.getElementById(opts.id),
-        els = root.querySelectorAll(config.selector)
+function Seed(el, data) {
 
-    self._bindings = {}
+    if (typeof el === 'string') {
+      el = document.querySelector(el)
+    }
+
+  this.el = el
+  this._bindings = {}
     self.scope = {}
 
     // process nodes for directives
+    var els = el.querySelectorAll(config.selector)
     ;[].forEach.call(els, this._compileNode.bind(this))
     this._compileNode(root)
 
     // initialize all variables by invoking setters
     for (var key in self._bindings) {
-        self.scope[key] = opts.scope[key]
+        self.scope[key] = data[key]
     }
+
 }
 
 Seed.prototype._compileNode = function(node) {
@@ -102,3 +106,5 @@ function cloneAttributes(attributes) {
         }
     })
 }
+
+module.exports = Seed;
