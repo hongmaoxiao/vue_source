@@ -12,9 +12,20 @@ module.exports = {
     delegate: function(handler, args) {
         var selector = args[0]
         return function(e) {
-            if (e.target.webkitMatchesSelector(selector)) {
+          console.log('triggered')
+            if (delegateCheck(e.target, e.currentTarget, selector)) {
                 handler.apply(this, arguments)
             }
         }
     }
+}
+
+function delegateCheck(current, top, selector) {
+  if (current.webkitMatchsSelector(selector)) {
+    return true
+  } else if (current === top) {
+    return false
+  } else {
+    return delegateCheck(current.parentNode, top, selector)
+  }
 }
