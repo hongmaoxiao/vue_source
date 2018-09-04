@@ -2,23 +2,23 @@ var config = require('./config'),
     bindingParser = require('./binding')
 
 var map = Array.prototype.map,
-  each = Array.prototype.forEach
+    each = Array.prototype.forEach
 
 function Seed(el, data, options) {
 
     if (typeof el === 'string') {
-      el = document.querySelector(el)
+        el = document.querySelector(el)
     }
 
-  this.el = el
+    this.el = el
     this.scope = data
-  this._bindings = {}
-  this._options = options || {}
+    this._bindings = {}
+    this._options = options || {}
 
-  var key, dataCopy = {}
-  for (key in data) {
-    dataCopy[key] = data[key]
-  }
+    var key, dataCopy = {}
+    for (key in data) {
+        dataCopy[key] = data[key]
+    }
 
     // process nodes for directives
     this._compileNode(el)
@@ -31,62 +31,62 @@ function Seed(el, data, options) {
 }
 
 Seed.prototype._compileNode = function(node) {
-  var self = this,
-    ctrl = config.prefix + '-controller'
+    var self = this,
+        ctrl = config.prefix + '-controller'
 
-  if (node.nodeType === 3) {
-    // text node
-    self._compileTextNode(node)
-  } else if (node.attributes && node.attributes.length) {
+    if (node.nodeType === 3) {
+        // text node
+        self._compileTextNode(node)
+    } else if (node.attributes && node.attributes.length) {
         // clone attributes because the list can change
-    var attrs = map.call(node.attributes, function (attr) {
-      return {
-        name: attr.name,
-        expressions: attr.value.split(',')
-      }
-    })
-    attrs.forEach(function(attr){
-      if (attr.name === ctrl) {
-        return
-      }
-      attr.expressions.forEach(function(exp) {
-      var binding = bindingParser.parse(attr.name, exp)
-      if (binding) {
-        self._bind(node, binding)
-      }
-      })
-    })
-  }
+        var attrs = map.call(node.attributes, function(attr) {
+            return {
+                name: attr.name,
+                expressions: attr.value.split(',')
+            }
+        })
+        attrs.forEach(function(attr) {
+            if (attr.name === ctrl) {
+                return
+            }
+            attr.expressions.forEach(function(exp) {
+                var binding = bindingParser.parse(attr.name, exp)
+                if (binding) {
+                    self._bind(node, binding)
+                }
+            })
+        })
+    }
 
-  if (!node['sd-block'] && node.childNodes.length) {
-    each.call(node.childNodes, function(child) {
-      self._compileNode(child)
-    })
-  }
+    if (!node['sd-block'] && node.childNodes.length) {
+        each.call(node.childNodes, function(child) {
+            self._compileNode(child)
+        })
+    }
 }
 
-Seed.prototype._compileTextNode = function (node) {
-  return node
+Seed.prototype._compileTextNode = function(node) {
+    return node
 }
 
 Seed.prototype._bind = function(node, bindingInstance) {
 
-  bindingInstance.seed = this
+    bindingInstance.seed = this
     bindingInstance.el = node
 
     node.removeAttribute(config.prefix + '-' + bindingInstance.directiveName)
 
     var key = bindingInstance.key,
-    scope = this.scope,
+        scope = this.scope,
         epr = this._options.eachPrefixRE,
-  isEach = epr && epr.test(key)
-    // TODO make scope chain work on nested controllers
+        isEach = epr && epr.test(key)
+        // TODO make scope chain work on nested controllers
     if (isEach) {
-      key = key.replace(epr, '')
-      scope = this._options.parentScope
+        key = key.replace(epr, '')
+        scope = this._options.parentScope
     }
 
-    var binding  = this._bindings[key] || this._createBinding(key, scope)
+    var binding = this._bindings[key] || this._createBinding(key, scope)
 
     // add directive to this binding
     binding.instances.push(bindingInstance)
@@ -101,7 +101,7 @@ Seed.prototype._bind = function(node, bindingInstance) {
 Seed.prototype._createBinding = function(key, scope) {
     var binding = {
         value: null,
-        directives: []
+        instances: []
     }
 
     this._bindings[key] = binding
@@ -132,10 +132,11 @@ Seed.prototype.dump = function() {
 
 Seed.prototype.destroy = function() {
     for (var key in this._bindings) {
-        this._bindings[key].instances.forEach(unbind)
-      ;delete this._bindings[key]
+        this._bindings[key].instances.forEach(unbind);
+        delete this._bindings[key]
     }
     this.el.parentNode.removeChild(this.el)
+
     function unbind(instance) {
         if (instance.unbind) {
             instance.unbind()

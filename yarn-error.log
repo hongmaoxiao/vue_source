@@ -1,0 +1,39 @@
+Arguments: 
+  /Users/fxm/.nvm/versions/node/v10.6.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js remove -g component
+
+PATH: 
+  /Users/fxm/.nvm/versions/node/v10.6.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/fxm/go:/Users/fxm/source/backend/go:/Users/fxm/learn/source/backend/go/bin:/bin:/Users/fxm/Library/Android/sdk/tools:/Users/fxm/Library/Android/sdk/platform-tools:/usr/local/bin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  10.6.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "seed",
+    "version": "0.0.1",
+    "devDependencies": {
+      "grunt": "~0.4.1",
+      "grunt-contrib-watch": "~0.4.4",
+      "grunt-component-build": "~0.3.0",
+      "grunt-contrib-jshint": "~0.6.0",
+      "grunt-mocha": "~0.4.0",
+      "chai": "~1.7.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: No lockfile in this directory. Run `yarn install` to generate one.
+      at new MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:89389:13
